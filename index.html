@@ -1,0 +1,61 @@
+<!DOCTYPE html> <!-- 指定使用 HTML5 文件格式 -->
+<html lang="zh-Hant"> <!-- 設定頁面語言為繁體中文 -->
+<head> <!-- 開始設定頁面中繼資料 -->
+<meta charset="utf-8"> <!-- 使用 UTF-8 編碼支援繁體中文 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 讓畫面適應不同尺寸裝置 -->
+<title>五島生活城 | 水上群島</title> <!-- 設定瀏覽器分頁標題 -->
+<link rel="stylesheet" href="style.css"> <!-- 載入場景與介面的樣式 -->
+<script src="libraries/p5.min.js"></script> <!-- 載入 p5.js 用於繪製介面和處理操作 -->
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script> <!-- 透過 import map 載入指定版本的 three.js -->
+<script src="sketch.js"></script> <!-- 載入 p5.js 介面和互動程式 -->
+</head> <!-- 結束頁面中繼資料 -->
+<body> <!-- 開始頁面內容 -->
+<main id="scene-root" aria-label="可互動的水上五島城市群景"></main> <!-- 放置 three.js 3D 場景 -->
+<div id="canvas-controls" aria-label="場景控制"> <!-- 提供位於 p5 畫布上方的可存取控制熱區 -->
+<button id="orbit-control" type="button" aria-label="切換旋轉與平移模式" title="切換旋轉與平移模式"></button> <!-- 操作左上方的旋轉模式按鈕 -->
+<button id="reset-control" type="button" aria-label="重設視角" title="重設視角"></button> <!-- 操作左上方的重設視角按鈕 -->
+<button id="zoom-out-control" type="button" aria-label="縮小場景" title="縮小場景"></button> <!-- 操作左上方的縮小按鈕 -->
+<button id="zoom-in-control" type="button" aria-label="放大場景" title="放大場景"></button> <!-- 操作左上方的放大按鈕 -->
+</div> <!-- 結束場景控制熱區 -->
+<button id="avatar-settings-toggle" type="button">角色設定</button> <!-- 提供隨時開啟角色設定的按鈕 -->
+<section id="avatar-panel" aria-labelledby="avatar-title"> <!-- 建立進入者角色建立與設定面板 -->
+<form id="avatar-form"> <!-- 建立可保存的角色設定表單 -->
+<h2 id="avatar-title">設定你的進入者</h2> <!-- 顯示角色設定標題 -->
+<label for="avatar-name">角色名稱</label> <!-- 標示角色名稱欄位 -->
+<input id="avatar-name" name="name" type="text" maxlength="16" autocomplete="nickname" required> <!-- 輸入將顯示在角色頭頂的名稱 -->
+<label for="avatar-pet">同行小動物</label> <!-- 標示寵物選擇欄位 -->
+<select id="avatar-pet" name="pet"> <!-- 選擇不帶寵物或攜帶的小動物 -->
+<option value="none">不帶小動物</option> <!-- 提供不帶寵物的選項 -->
+<option value="dog">小狗</option> <!-- 提供小狗選項 -->
+<option value="cat">小貓</option> <!-- 提供小貓選項 -->
+<option value="rabbit">兔子</option> <!-- 提供兔子選項 -->
+</select> <!-- 結束寵物選擇欄位 -->
+<label for="avatar-outfit">穿著樣式</label> <!-- 標示服裝樣式欄位 -->
+<select id="avatar-outfit" name="outfit"> <!-- 選擇進入者的服裝風格 -->
+<option value="casual">休閒青綠</option> <!-- 提供青綠色休閒服 -->
+<option value="traveler">旅行背包</option> <!-- 提供旅行服裝與背包 -->
+<option value="sport">活力運動</option> <!-- 提供藍色運動服 -->
+<option value="ranger">自然探索</option> <!-- 提供綠色探索服裝 -->
+</select> <!-- 結束服裝樣式欄位 -->
+<label for="avatar-hair">髮型樣式</label> <!-- 標示髮型選擇欄位 -->
+<select id="avatar-hair" name="hairStyle"> <!-- 選擇角色髮型 -->
+<option value="short">俐落短髮</option> <!-- 提供短髮造型 -->
+<option value="long">飄逸長髮</option> <!-- 提供長髮造型 -->
+<option value="spiky">俏皮尖髮</option> <!-- 提供尖髮造型 -->
+<option value="curly">蓬鬆捲髮</option> <!-- 提供捲髮造型 -->
+</select> <!-- 結束髮型選擇欄位 -->
+<label for="avatar-hair-color">髮色</label> <!-- 標示頭髮顏色欄位 -->
+<select id="avatar-hair-color" name="hairColor"> <!-- 選擇頭髮顏色 -->
+<option value="#49352c">深棕色</option> <!-- 提供深棕髮色 -->
+<option value="#26232c">黑色</option> <!-- 提供黑色髮色 -->
+<option value="#b96e42">栗子色</option> <!-- 提供栗子髮色 -->
+<option value="#d6b75f">金黃色</option> <!-- 提供金黃髮色 -->
+</select> <!-- 結束頭髮顏色欄位 -->
+<label class="avatar-checkbox" for="avatar-helmet"><input id="avatar-helmet" name="helmet" type="checkbox">戴安全帽</label> <!-- 設定是否配戴安全帽 -->
+<p id="avatar-status" role="status" aria-live="polite"></p> <!-- 提示使用者角色設定儲存狀態 -->
+<button class="avatar-submit" type="submit">儲存並進入群島</button> <!-- 保存造型並開始遊戲 -->
+</form> <!-- 結束進入者角色設定表單 -->
+</section> <!-- 結束進入者角色設定面板 -->
+<script type="module" src="scene.js"></script> <!-- 啟動 three.js 場景模組 -->
+</body> <!-- 結束頁面內容 -->
+</html> <!-- 結束 HTML 文件 -->

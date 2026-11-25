@@ -1,0 +1,28 @@
+* { box-sizing: border-box; } /* 讓元素尺寸計算包含邊框與內距 */
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; } /* 讓場景鋪滿視窗並隱藏捲軸 */
+body { background: #b7e5ef; color: #214750; font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif; } /* 設定海水底色與繁體中文介面字體 */
+#scene-root { position: fixed; inset: 0; z-index: 0; } /* 將 three.js 場景固定在畫面底層 */
+#scene-root canvas { display: block; width: 100%; height: 100%; } /* 讓 WebGL 畫布填滿場景容器 */
+#scene-root > canvas:first-child { position: fixed; inset: 0; z-index: 0; } /* 固定 three.js 畫布於視窗底層 */
+.p5Canvas { position: fixed; inset: 0; z-index: 2; width: 100vw !important; height: 100vh !important; pointer-events: auto; } /* 將 p5.js 介面固定覆蓋在 3D 場景上 */
+#canvas-controls { position: fixed; top: 18px; left: 18px; z-index: 30; width: 238px; height: 148px; pointer-events: none; } /* 將可點擊控制熱區固定在 p5 畫布上方 */
+#canvas-controls button { position: absolute; display: block; padding: 0; border: 0; border-radius: 10px; background: transparent; cursor: pointer; pointer-events: auto; } /* 讓透明熱區能接收滑鼠與鍵盤操作 */
+#canvas-controls button:focus-visible { outline: 2px solid #27726f; outline-offset: 2px; background: #ffffff55; } /* 為鍵盤聚焦的透明控制顯示明確外框 */
+#orbit-control { top: 13px; left: 158px; width: 68px; height: 28px; } /* 對齊 p5 繪製的旋轉模式按鈕 */
+#reset-control { top: 90px; left: 12px; width: 70px; height: 35px; } /* 對齊 p5 繪製的重設按鈕 */
+#zoom-out-control { top: 90px; left: 88px; width: 55px; height: 35px; } /* 對齊 p5 繪製的縮小按鈕 */
+#zoom-in-control { top: 90px; left: 149px; width: 77px; height: 35px; } /* 對齊 p5 繪製的放大按鈕 */
+#avatar-settings-toggle { position: fixed; top: 18px; right: 18px; z-index: 40; padding: 10px 16px; border: 0; border-radius: 12px; background: #27726f; color: #fff; font: 600 13px "Microsoft JhengHei", sans-serif; cursor: pointer; box-shadow: 0 5px 16px #28464733; } /* 顯示固定在右上方的角色設定按鈕 */
+#avatar-settings-toggle:hover { background: #1d5e5c; } /* 滑鼠移入時加深設定按鈕顏色 */
+#avatar-panel { position: fixed; top: 66px; right: 18px; z-index: 40; width: min(300px, calc(100vw - 36px)); max-height: calc(100vh - 82px); overflow-y: auto; padding: 18px; border: 1px solid #ffffffa8; border-radius: 18px; background: #f7faf3f2; color: #283c3a; box-shadow: 0 12px 35px #24474938; font: 13px "Microsoft JhengHei", sans-serif; } /* 建立清楚易讀且高於 p5 畫布的角色設定卡片 */
+#avatar-panel[hidden] { display: none; } /* 隱藏已收起的設定卡片 */
+#avatar-panel h2 { margin: 0 0 14px; font-size: 17px; } /* 設定角色設定標題間距 */
+#avatar-panel label { display: block; margin: 10px 0 5px; font-weight: 600; } /* 排列欄位標籤並加強文字辨識 */
+#avatar-panel input:not([type="checkbox"]), #avatar-panel select { width: 100%; min-height: 36px; padding: 7px 9px; border: 1px solid #c8d6cc; border-radius: 9px; background: #fff; color: #283c3a; font: inherit; } /* 統一名稱輸入框與選擇欄位樣式 */
+#avatar-panel select option { background: #fff; color: #283c3a; } /* 明確設定原生下拉選項的文字與底色 */
+#avatar-panel input:focus, #avatar-panel select:focus { outline: 2px solid #6aa9a0; outline-offset: 1px; } /* 以清晰外框標示鍵盤目前選取的欄位 */
+#avatar-panel .avatar-checkbox { display: flex; align-items: center; gap: 8px; margin: 13px 0; } /* 將安全帽選項與核取方塊水平排列 */
+#avatar-panel .avatar-checkbox input { width: 17px; height: 17px; accent-color: #27726f; } /* 放大並套用主題色安全帽核取方塊 */
+#avatar-panel .avatar-submit { width: 100%; min-height: 40px; margin-top: 5px; border: 0; border-radius: 10px; background: #27726f; color: #fff; font: 600 13px "Microsoft JhengHei", sans-serif; cursor: pointer; } /* 強調保存設定並進入群島的主要動作 */
+#avatar-panel .avatar-submit:hover { background: #1d5e5c; } /* 滑鼠移入時加深保存按鈕顏色 */
+#avatar-status { min-height: 18px; margin: 8px 0 0; color: #9b423b; font-size: 12px; } /* 顯示角色設定保存或輸入錯誤 */
