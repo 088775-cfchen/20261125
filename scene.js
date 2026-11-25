@@ -12,7 +12,8 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping; // 使用電影式色調映�
 renderer.toneMappingExposure = 1.08; // 微調場景整體曝光
 root.appendChild(renderer.domElement); // 將 3D 畫布加入頁面
 const camera = new THREE.OrthographicCamera(-10, 10, 10, -10, 0.1, 100); // 建立等比例正交攝影機
-const target = new THREE.Vector3(0, 0, 0); // 設定攝影機注視的場景中心
+const orbitCenter = new THREE.Vector3(0, 0.9, 0); // 將攝影機旋轉中心固定在中央科技島中心
+const target = orbitCenter.clone(); // 設定攝影機初始注視中央島面
 const cameraFollowOffset = new THREE.Vector3(0, 0, 0); // 保存使用者平移後相對角色的鏡頭偏移
 let cameraAngle = Math.PI / 4; // 設定從右上方觀察場景的初始水平角度
 let cameraZoom = 0.95; // 在完整呈現五島的同時讓場景更靠近畫面
@@ -33,6 +34,7 @@ scene.add(sunlight); // 將方向光加入場景
 const water = new THREE.Mesh(new THREE.PlaneGeometry(180, 180), new THREE.MeshStandardMaterial({ color: "#88c7ca", roughness: 0.88, metalness: 0.01 })); // 建立參考圖色調的寬廣青綠水面
 water.rotation.x = -Math.PI / 2; // 將水面轉為水平
 water.position.y = -0.14; // 將水面放在平台下方
+const cameraMinHeight = Math.max(water.position.y + 0.75, 1.25); // 限制鏡頭最低高度並留在水面與平台上方
 water.receiveShadow = true; // 讓水面承接浮島陰影
 scene.add(water); // 將水面加入場景
 const platformMaterial = new THREE.MeshStandardMaterial({ color: "#f0e2c4", roughness: 0.88 }); // 建立淺沙色平台側面材質
@@ -648,7 +650,8 @@ player.rightLeg.rotation.x = swing; // 擺動玩家右腳
 player.root.position.y = getWalkHeight(player.root.position.x, player.root.position.z) + (walking ? Math.abs(Math.sin(time * 16)) * 0.025 : 0); // 設定玩家地面高度與步行彈跳
 } // 結束玩家路徑與步行動畫
 function updateCamera() { // 依照目前角度與距離更新攝影機
-camera.position.set(target.x + Math.cos(cameraAngle) * 21, cameraHeight, target.z + Math.sin(cameraAngle) * 21); // 從可調高度的右上方斜俯視場景
+cameraHeight = THREE.MathUtils.clamp(cameraHeight, cameraMinHeight, 30); // 每次更新都將鏡頭高度限制在水面與平台上方
+camera.position.set(orbitCenter.x + Math.cos(cameraAngle) * 21, cameraHeight, orbitCenter.z + Math.sin(cameraAngle) * 21); // 以中央島為水平旋轉軸心並調整俯視高度
 camera.lookAt(target); // 讓攝影機始終注視場景中心
 camera.zoom = cameraZoom; // 將縮放比例套用到正交攝影機視野
 const aspect = window.innerWidth / window.innerHeight; // 取得視窗寬高比例
@@ -664,8 +667,8 @@ window.sceneControls = { // 提供 p5.js 介面使用的場景控制方法
 orbit: (delta) => { cameraAngle += delta; updateCamera(); }, // 依照拖曳量旋轉俯視角度
 zoom: (amount) => { cameraZoom = THREE.MathUtils.clamp(cameraZoom - amount, 0.4, 3.0); updateCamera(); }, // 以正交攝影機縮放比例調整觀看遠近
 pan: (pixels) => { const distance = pixels * 40 / (window.innerHeight * cameraZoom); cameraFollowOffset.x = THREE.MathUtils.clamp(cameraFollowOffset.x - Math.sin(cameraAngle) * distance, -30, 30); cameraFollowOffset.z = THREE.MathUtils.clamp(cameraFollowOffset.z + Math.cos(cameraAngle) * distance, -30, 30); updateCamera(); }, // 依照水平拖曳調整跟隨鏡頭偏移
-tilt: (amount) => { cameraHeight = THREE.MathUtils.clamp(cameraHeight + amount, 0.15, 30); updateCamera(); }, // 依照垂直拖曳將攝影機高度調整至接近水平
-reset: () => { cameraAngle = Math.PI / 4; cameraZoom = 0.95; cameraHeight = 17; cameraFollowOffset.set(0, 0, 0); target.set(0, 0, 0); updateCamera(); }, // 將攝影機恢復中央預設角度、高度與縮放
+tilt: (amount) => { cameraHeight = THREE.MathUtils.clamp(cameraHeight + amount, cameraMinHeight, 30); updateCamera(); }, // 依照垂直拖曳升降攝影機且不低於水面安全高度
+reset: () => { cameraAngle = Math.PI / 4; cameraZoom = 0.95; cameraHeight = 17; cameraFollowOffset.set(0, 0, 0); target.copy(orbitCenter); updateCamera(); }, // 將攝影機恢復中央島旋轉軸心、高度與縮放
 configurePlayer, // 提供角色設定介面更新進入者外觀的方法
 movePlayerTo: setPlayerDestination, // 提供滑鼠點選地面設定玩家目的地的方法
 movePlayerToWorld, // 提供集章標籤使用島面座標設定玩家目的地
